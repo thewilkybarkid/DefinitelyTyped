@@ -16,7 +16,7 @@ function test_datafactory() {
     const defaultGraph1: RDF.DefaultGraph = DataFactory.defaultGraphInstance;
     const defaultGraph2: RDF.DefaultGraph = DataFactory.defaultGraph();
 
-    const term: RDF.Term = <any> {};
-    const triple: RDF.Quad = DataFactory.triple(term, term, term);
+    const term: RDF.NamedNode = <any> {};
+    const triple: RDF.Triple = DataFactory.triple(term, term, term);
     const quad: RDF.Quad = DataFactory.quad(term, term, term, term);
 }

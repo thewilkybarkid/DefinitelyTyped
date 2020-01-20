@@ -176,27 +176,27 @@ export type Quad_Graph = DefaultGraph | NamedNode | BlankNode | Variable;
 /**
  * An RDF quad, taking any Term in its positions, containing the subject, predicate, object and graph terms.
  */
-export interface BaseQuad {
+export interface BaseQuad<S extends Term = Term, P extends Term = Term, O extends Term = Term, G extends Term = Term> {
   /**
    * The subject.
    * @see Quad_Subject
    */
-  subject: Term;
+  subject: S;
   /**
    * The predicate.
    * @see Quad_Predicate
    */
-  predicate: Term;
+  predicate: P;
   /**
    * The object.
    * @see Quad_Object
    */
-  object: Term;
+  object: O;
   /**
    * The named graph.
    * @see Quad_Graph
    */
-  graph: Term;
+  graph: G;
 
   /**
    * @param other The term to compare with.
@@ -206,44 +206,26 @@ export interface BaseQuad {
 }
 
 /**
+ * An RDF triple, containing the subject, predicate, object terms.
+ *
+ * Triple is an alias of Quad.
+ */
+export interface BaseTriple<S extends Term = Term, P extends Term = Term, O extends Term = Term>
+    extends BaseQuad<S, P, O, DefaultGraph> {}
+
+/**
  * An RDF quad, containing the subject, predicate, object and graph terms.
  */
-export interface Quad extends BaseQuad {
-    /**
-     * The subject.
-     * @see Quad_Subject
-     */
-    subject: Quad_Subject;
-    /**
-     * The predicate.
-     * @see Quad_Predicate
-     */
-    predicate: Quad_Predicate;
-    /**
-     * The object.
-     * @see Quad_Object
-     */
-    object: Quad_Object;
-    /**
-     * The named graph.
-     * @see Quad_Graph
-     */
-    graph: Quad_Graph;
-
-    /**
-     * @param other The term to compare with.
-     * @return True if and only if the argument is a) of the same type b) has all components equal.
-     */
-    equals(other: BaseQuad): boolean;
-}
+export interface Quad<S extends Quad_Subject = Quad_Subject, P extends Quad_Predicate = Quad_Predicate,
+    O extends Quad_Object = Quad_Object, G extends Quad_Graph = Quad_Graph> extends BaseQuad<S, P, O, G> {}
 
 /**
  * An RDF triple, containing the subject, predicate, object terms.
  *
  * Triple is an alias of Quad.
  */
-// tslint:disable-next-line no-empty-interface
-export interface Triple extends Quad {}
+export interface Triple<S extends Quad_Subject = Quad_Subject, P extends Quad_Predicate = Quad_Predicate,
+    O extends Quad_Object = Quad_Object> extends BaseTriple<S, P, O>, Quad<S, P, O, DefaultGraph> {}
 
 /**
  * A factory for instantiating RDF terms, triples and quads.
@@ -299,7 +281,7 @@ export interface DataFactory {
      * @see Triple
      * @see DefaultGraph
      */
-    triple<Q extends BaseQuad = Quad>(subject: Q['subject'], predicate: Q['predicate'], object: Q['object']): Q;
+    triple<Q extends BaseTriple = Triple>(subject: Q['subject'], predicate: Q['predicate'], object: Q['object']): Q;
 
     /**
      * @param subject   The quad subject term.
