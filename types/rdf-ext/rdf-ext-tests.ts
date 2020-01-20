@@ -1,6 +1,7 @@
 import rdf = require('rdf-ext');
-import { Literal, Quad, Dataset, NamedNode, Stream, Sink, DatasetCore } from 'rdf-js';
+import { Literal, Quad, Triple, Dataset, NamedNode, Stream, Sink, DatasetCore } from 'rdf-js';
 import QuadExt = require('rdf-ext/lib/Quad');
+import TripleExt = require('rdf-ext/lib/Triple');
 import DataFactoryExt = require('rdf-ext/lib/DataFactory');
 import DatasetExt = require('rdf-ext/lib/Dataset');
 import { EventEmitter } from 'events';
@@ -162,12 +163,16 @@ function static_Quad_fromBaseTerms(): Quad {
     return rdf.quad(subject, predicate, object, graph);
 }
 
-function static_Triple_fromBaseTerms(): Quad {
+function static_Triple_fromBaseTerms(): Triple {
     const subject: NamedNode = <any> {};
     const predicate: NamedNode = <any> {};
     const object: NamedNode = <any> {};
 
     return rdf.triple(subject, predicate, object);
+}
+
+function static_TripleAsQuad_fromBaseTerms(): Quad {
+    return static_Triple_fromBaseTerms();
 }
 
 // tslint:disable:use-default-type-parameter
@@ -181,13 +186,17 @@ function instance_Quad_fromBaseTerms(): Quad {
     return factory.quad<QuadExt>(subject, predicate, object, graph);
 }
 
-function instance_Triple_fromBaseTerms(): Quad {
+function instance_Triple_fromBaseTerms(): Triple {
     const factory: DataFactoryExt = <any> {};
     const subject: NamedNode = <any> {};
     const predicate: NamedNode = <any> {};
     const object: NamedNode = <any> {};
 
-    return factory.triple<QuadExt>(subject, predicate, object);
+    return factory.triple<TripleExt>(subject, predicate, object);
+}
+
+function instance_TripleAsQuad_fromBaseTerms(): Quad {
+    return instance_Triple_fromBaseTerms();
 }
 // tslint:enable:use-default-type-parameter
 
@@ -211,12 +220,12 @@ function graph_noParams_returnsDataset(): boolean {
 }
 
 function graph_initWithTriples(): Dataset {
-    const triple1 = rdf.quad(
+    const triple1 = rdf.triple(
         rdf.namedNode('http://example.org/subject'),
         rdf.namedNode('http://example.org/predicate'),
         rdf.literal('object1'));
 
-    const triple2 = rdf.quad(
+    const triple2 = rdf.triple(
         rdf.namedNode('http://example.org/subject'),
         rdf.namedNode('http://example.org/predicate'),
         rdf.literal('object2'));

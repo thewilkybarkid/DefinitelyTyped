@@ -1,4 +1,4 @@
-import { DataFactory, Sink, NamedNode, BaseQuad, Quad, Stream, Quad_Subject, Quad_Predicate, Quad_Object, Quad_Graph } from 'rdf-js';
+import { DataFactory, Sink, NamedNode, BaseQuad, Quad, BaseTriple, Stream, Quad_Subject, Quad_Predicate, Quad_Object, Quad_Graph } from 'rdf-js';
 import BlankNodeExt = require("./BlankNode");
 import LiteralExt = require("./Literal");
 import NamedNodeExt = require("./NamedNode");
@@ -8,6 +8,7 @@ import DefaultGraphExt = require("./DefaultGraph");
 import VariableExt = require("./Variable");
 import Dataset = require('./Dataset');
 import { PropType } from './_PropType';
+import TripleExt = require('./Triple');
 
 type PrefixesRecord = Record<string, NamedNode | string>;
 type Prefixes = PrefixMap | PrefixesRecord;
@@ -29,7 +30,7 @@ declare class DataFactoryExt implements DataFactory {
   static literal(value: string, languageOrDatatype?: string | NamedNode): LiteralExt;
   static variable(value: string): VariableExt;
   static defaultGraph(): DefaultGraphExt;
-  static triple(subject: Quad_Subject, predicate: Quad_Predicate, object: Quad_Object): QuadExt;
+  static triple(subject: Quad_Subject, predicate: Quad_Predicate, object: Quad_Object): TripleExt;
   static quad(subject: Quad_Subject, predicate: Quad_Predicate, object: Quad_Object, graph?: Quad_Graph): QuadExt;
   static graph(quads?: any): Dataset;
   static prefixMap(prefixes: Prefixes): PrefixMap;
@@ -41,7 +42,7 @@ declare class DataFactoryExt implements DataFactory {
   namedNode(value: string): NamedNode;
   // tslint:disable:no-unnecessary-generics
   quad<Q extends BaseQuad = QuadExt>(subject: Quad_Subject, predicate: Quad_Predicate, object: Quad_Object, graph?: Quad_Graph): Q;
-  triple<Q extends BaseQuad = QuadExt>(subject: Quad_Subject, predicate: Quad_Predicate, object: Quad_Object): Q;
+  triple<Q extends BaseTriple = TripleExt>(subject: Quad_Subject, predicate: Quad_Predicate, object: Quad_Object): Q;
   // tslint:enable:no-unnecessary-generics
   variable(value: string): VariableExt;
 }
